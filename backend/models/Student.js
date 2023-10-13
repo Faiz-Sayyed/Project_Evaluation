@@ -15,6 +15,7 @@ const student = new mongoose.Schema({
         required: true,
     },
     mentorID: String,
+    mentorName: String,
     scores: {
         Ideation: {
             type: Number,
