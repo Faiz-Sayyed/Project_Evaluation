@@ -5,14 +5,16 @@ const student = new mongoose.Schema({
         type: String,
         required: true,
     },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
     project: {
         type: String,
         required: true,
     },
-    mentor: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Mentor',
-    },
+    mentorID: String,
     scores: {
         Ideation: {
             type: Number,

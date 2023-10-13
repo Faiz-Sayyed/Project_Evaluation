@@ -5,10 +5,7 @@ const mentor = new mongoose.Schema({
         type: String,
         required: true,
     },
-    students: [{
-        type: mongoose.Types.ObjectId,
-        ref: 'Student'
-    }]
+    students: [String]
 })
 
 module.exports = mongoose.model('Mentor', mentor);
