@@ -16,7 +16,7 @@ router.post('/addMentor', async (req, res) => {
 })
 
 router.patch('/updateMentor', async (req, res) => {
-    await Mentor.findByIdAndUpdate(id, req.body);
+    await Mentor.findByIdAndUpdate(req.body.id, req.body);
 
     const allMentors = await Mentor.find({});
     res.status(200).json(allMentors);
