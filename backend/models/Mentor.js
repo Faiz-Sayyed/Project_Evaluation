@@ -5,7 +5,11 @@ const mentor = new mongoose.Schema({
         type: String,
         required: true,
     },
-    students: [String]
+    students: [String],
+    hasSubmitted: {
+        type: Boolean,
+        default: false
+    }
 })
 
 module.exports = mongoose.model('Mentor', mentor);
