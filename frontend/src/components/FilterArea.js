@@ -1,6 +1,6 @@
 import React from "react";
 
-const FilterArea = ({ setFilter }) => {
+const FilterArea = ({ filter, setFilter }) => {
   return (
     <form className="flex justify-between items-center px-20 lg:px-20 py-5 text-2xl bg-gray-200">
       <div className="w-full px-5 py-5 bg-gray-300 drop-shadow-lg rounded-lg">
@@ -13,6 +13,7 @@ const FilterArea = ({ setFilter }) => {
               id="none"
               name="filter"
               onChange={(e) => setFilter(-1)}
+              checked={filter === -1}
             />
             <label htmlFor="none" className="ml-2 text-xl">
               All
@@ -25,6 +26,7 @@ const FilterArea = ({ setFilter }) => {
               id="marked"
               name="filter"
               onChange={(e) => setFilter(1)}
+              checked={filter === 1}
             />
             <label htmlFor="marked" className="ml-2 text-xl">
               Marked
@@ -37,6 +39,7 @@ const FilterArea = ({ setFilter }) => {
               id="notMarked"
               name="filter"
               onChange={(e) => setFilter(0)}
+              checked={filter === 0}
             />
             <label htmlFor="notMarked" className="ml-2 text-xl">
               Not Marked

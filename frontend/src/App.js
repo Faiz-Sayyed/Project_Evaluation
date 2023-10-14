@@ -68,7 +68,7 @@ function App() {
         <Loader />
       ) : (
         <>
-          <FilterArea setFilter={setFilter} />
+          <FilterArea filter={filter} setFilter={setFilter} />
 
           <div className="bg-gray-200">
             {error && <ErrorCard error={error} />}
