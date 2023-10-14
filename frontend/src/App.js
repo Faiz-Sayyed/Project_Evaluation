@@ -1,107 +1,3 @@
-// import { useState, useEffect } from 'react'
-// import axios from 'axios';
-// import StudentCard from './components/StudentCard';
-
-// function App() {
-//   const [mentors, setMentors] = useState([]);
-//   const [mentor, setMentor] = useState([]);
-//   const [students, setStudents] = useState([]);
-//   const [selectedStudents, setSelectedStudents] = useState([]);
-//   const [editing, setEditing] = useState(0);
-//   const [error, setError] = useState("")
-
-//   useEffect(() => {
-//     const getMentors = async () => {
-//       await axios.get('http://localhost:5000/api/v1/mentors/getMentors')
-//         .then((response) => {
-//           setMentors(response.data);
-//         })
-//     }
-
-//     const getStudents = async () => {
-//       await axios.get('http://localhost:5000/api/v1/students/getStudents')
-//         .then((response) => {
-//           setStudents(response.data);
-//           response.data.forEach((student) => {
-//             if (mentor && student.mentorID && student.mentorID === mentor._id) {
-//               setSelectedStudents([...selectedStudents, student]);
-//             }
-//           })
-//         })
-//     }
-
-//     getMentors();
-//     getStudents();
-
-//   }, [])
-
-//   useEffect(() => {
-//     setMentor(mentors[0]);
-//   }, [mentors])
-
-//   return (
-//     <>
-//       <h1 className='flex justify-center text-3xl mt-5'>Project Evaluation Dashboard</h1>
-//       <div className='flex justify-end'>
-//         {
-//           mentor && <div>Name: {mentor.name}</div>
-//         }
-//       </div>
-
-//       {error && <div>{error}</div>}
-
-//       <div className='flex justify-around p-5'>
-//         <div className='flex flex-col items-center w-2/5 border border-black px-5'>
-//           <div className='text-xl m-5'>Selected Students</div>
-//           <div className='w-full'>
-//             {
-//               selectedStudents.map((student) => (
-//                 <StudentCard
-//                   key={student._id}
-//                   student={student}
-//                   mentor={mentor}
-//                   students={students}
-//                   setStudents={setStudents}
-//                   selectedStudents={selectedStudents}
-//                   setSelectedStudents={setSelectedStudents}
-//                   isSelected={true}
-//                   editing={editing}
-//                   setEditing={setEditing}
-//                   setError={setError}
-//                   className='w-1/2' />
-//               ))
-//             }
-//           </div>
-//         </div>
-//         <div className='flex flex-col items-center w-2/5 border border-black px-5'>
-//           <div className='text-xl m-5'>Students</div>
-//           <div className='w-full'>
-//             {
-//               students.map((student) => (
-//                 <StudentCard
-//                   key={student._id}
-//                   student={student}
-//                   mentor={mentor}
-//                   students={students}
-//                   setStudents={setStudents}
-//                   selectedStudents={selectedStudents}
-//                   setSelectedStudents={setSelectedStudents}
-//                   isSelected={false}
-//                   editing={editing}
-//                   setEditing={setEditing}
-//                   setError={setError}
-//                   className='w-1/2' />
-//               ))
-//             }
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default App;
-
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import StudentCard from './components/StudentCard';
@@ -113,7 +9,8 @@ function App() {
   const [scores, setScores] = useState(null);
   const [editing, setEditing] = useState(0);
   const [markedStudentsCount, setMarkedStudentsCount] = useState(0);
-  const [error, setError] = useState("")
+  const [filter, setFilter] = useState(-1);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const getMentors = async () => {
@@ -137,7 +34,7 @@ function App() {
 
   }, [])
 
-  const submit = async (id) => {
+  const submit = async () => {
     setError("");
 
     if (mentor.students.length < 3) {
@@ -180,11 +77,31 @@ function App() {
   return (
     <>
       <h1 className='flex justify-center text-3xl mt-5'>Project Evaluation Dashboard</h1>
+
       <div className='flex justify-end'>
         {
           mentor && <div>Name: {mentor.name}</div>
         }
       </div>
+
+      <form className='flex w-1/4 justify-between'>
+        <div>Filter:</div>
+
+        <div>
+          <input type="radio" id="none" name="filter" onChange={(e) => setFilter(-1)} />
+          <label htmlFor="none">All</label>
+        </div>
+
+        <div>
+          <input type="radio" id="marked" name="filter" onChange={(e) => setFilter(1)} />
+          <label htmlFor="marked">Marked</label>
+        </div>
+
+        <div>
+          <input type="radio" id="notMarked" name="filter" onChange={(e) => setFilter(0)} />
+          <label htmlFor="notMarked">Not Marked</label>
+        </div>
+      </form>
 
       {error && <div>{error}</div>}
 
@@ -198,7 +115,7 @@ function App() {
                 students.map((student) => (
                   <div key={student._id}>
                     {
-                      (student.mentorID && student.mentorID === mentor._id) ?
+                      ((student.mentorID && student.mentorID === mentor._id) && (filter === -1 || filter == student.isMarked)) ?
                         <StudentCard
                           key={student._id}
                           student={student}
@@ -228,7 +145,7 @@ function App() {
               mentor && students.map((student) => (
                 <div key={student._id}>
                   {
-                    (!student.mentorID || student.mentorID !== mentor._id) ?
+                    ((!student.mentorID || student.mentorID !== mentor._id) && (filter === -1 || filter == student.isMarked)) ?
                       <StudentCard
                         student={student}
                         mentor={mentor}
