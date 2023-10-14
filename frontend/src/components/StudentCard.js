@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const StudentCard = ({
@@ -6,14 +6,15 @@ const StudentCard = ({
     mentor,
     setMentors,
     setStudents,
-    scores,
-    setScores,
     editing,
     setEditing,
     setError,
     isSelected,
     markedStudentsCount,
     setMarkedStudentsCount }) => {
+
+    const [scores, setScores] = useState(student.scores);
+    const [totalMarks, setTotalMarks] = useState(student.totalMarks);
 
     const addStudent = async () => {
         setError("");
@@ -48,7 +49,7 @@ const StudentCard = ({
 
     const removeStudent = async () => {
         setError("");
-        if (student.isMarked) {
+        if (student.isMarked === true) {
             setMarkedStudentsCount(markedStudentsCount - 1);
         }
 
@@ -64,6 +65,7 @@ const StudentCard = ({
             mentorID: "",
             mentorName: "",
             scores: newScores,
+            totalMarks: 0,
             isMarked: false
         }).then((response) => {
             setStudents(response.data);
@@ -79,28 +81,36 @@ const StudentCard = ({
         }).then((response) => {
             setMentors(response.data);
         })
-
     }
 
     const saveScores = async () => {
         setEditing(0);
-        setMarkedStudentsCount(markedStudentsCount + 1);
+        if (student.isMarked === false) {
+            setMarkedStudentsCount(markedStudentsCount + 1);
+        }
 
         await axios.patch('http://localhost:5000/api/v1/students/updateStudent', {
             id: student._id,
             scores: scores,
+            totalMarks: totalMarks,
             isMarked: true
         }).then((response) => {
             setStudents(response.data);
+            response.data.forEach((item) => {
+                if (item._id === student._id) {
+                    setScores(item.scores);
+                }
+            })
         })
-
-        var newScores = scores;
-        const keys = Object.keys(newScores);
-        keys.forEach((key) => {
-            newScores[key] = 0;
-        })
-        setScores(newScores);
     }
+
+    useEffect(() => {
+        var totalMarks = 0;
+        Object.keys(scores).forEach((key) => {
+            totalMarks += scores[key];
+        })
+        setTotalMarks(totalMarks);
+    }, [scores])
 
     return (
         <div className='mb-5'>
@@ -150,7 +160,7 @@ const StudentCard = ({
                                     defaultValue={student.scores[key]}
                                     onChange={(e) => {
                                         const newScores = { ...scores };
-                                        newScores[key] = e.target.value;
+                                        newScores[key] = Number(e.target.value);
                                         setScores(newScores);
                                     }} />
                             </div>
@@ -163,6 +173,8 @@ const StudentCard = ({
                 </ul>
             </div>
             }
+
+            <div>Total Marks: {student.totalMarks}</div>
         </div >
     )
 }

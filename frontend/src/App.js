@@ -6,7 +6,6 @@ function App() {
   const [mentors, setMentors] = useState([]);
   const [mentor, setMentor] = useState(null);
   const [students, setStudents] = useState([]);
-  const [scores, setScores] = useState(null);
   const [editing, setEditing] = useState(0);
   const [markedStudentsCount, setMarkedStudentsCount] = useState(0);
   const [filter, setFilter] = useState(-1);
@@ -25,7 +24,6 @@ function App() {
       await axios.get('http://localhost:5000/api/v1/students/getStudents')
         .then((response) => {
           setStudents(response.data);
-          setScores(response.data[0].scores);
         })
     }
 
@@ -67,7 +65,7 @@ function App() {
   useEffect(() => {
     var count = 0;
     students.forEach((item) => {
-      if (mentor.students.includes(item._id) && item.isMarked === true) {
+      if (mentor && mentor.students.includes(item._id) && item.isMarked === true) {
         count++;
       }
     })
@@ -108,7 +106,7 @@ function App() {
       <div className='flex justify-around p-5'>
         <div className='flex flex-col items-center w-2/5 border border-black px-5'>
           <div className='text-xl m-5'>Selected Students</div>
-          <div className='flex justify-end w-full' onClick={submit}>Submit</div>
+          <div className='flex justify-end w-full hover:cursor-pointer' onClick={submit}>Submit</div>
           {
             mentor && <div className='w-full'>
               {
@@ -122,8 +120,6 @@ function App() {
                           mentor={mentor}
                           setMentors={setMentors}
                           setStudents={setStudents}
-                          scores={scores}
-                          setScores={setScores}
                           isSelected={true}
                           markedStudentsCount={markedStudentsCount}
                           setMarkedStudentsCount={setMarkedStudentsCount}
@@ -151,8 +147,6 @@ function App() {
                         mentor={mentor}
                         setMentors={setMentors}
                         setStudents={setStudents}
-                        scores={scores}
-                        setScores={setScores}
                         isSelected={false}
                         markedStudentsCount={markedStudentsCount}
                         setMarkedStudentsCount={setMarkedStudentsCount}
