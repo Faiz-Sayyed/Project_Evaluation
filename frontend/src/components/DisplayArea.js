@@ -36,7 +36,7 @@ const DisplayArea = ({
     setLoading(true);
 
     await axios
-      .patch("http://localhost:5000/api/v1/mentors/updateMentor", {
+      .patch(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/mentors/updateMentor`, {
         id: mentor._id,
         hasSubmitted: true,
       })

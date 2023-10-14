@@ -21,7 +21,7 @@ function App() {
 
     const getMentors = async () => {
       await axios
-        .get("http://localhost:5000/api/v1/mentors/getMentors")
+        .get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/mentors/getMentors`)
         .then((response) => {
           setMentors(response.data);
           setMentor(response.data[0]);
@@ -30,7 +30,7 @@ function App() {
 
     const getStudents = async () => {
       await axios
-        .get("http://localhost:5000/api/v1/students/getStudents")
+        .get(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/students/getStudents`)
         .then((response) => {
           setStudents(response.data);
         });

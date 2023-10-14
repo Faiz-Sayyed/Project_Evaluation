@@ -33,7 +33,7 @@ const StudentCard = ({
     setLoading(true);
 
     await axios
-      .patch("http://localhost:5000/api/v1/students/updateStudent", {
+      .patch(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/students/updateStudent`, {
         id: student._id,
         mentorID: mentor._id,
         mentorName: mentor.name,
@@ -45,7 +45,7 @@ const StudentCard = ({
     var newStudents = mentor.students;
     await newStudents.push(student._id);
     await axios
-      .patch("http://localhost:5000/api/v1/mentors/updateMentor", {
+      .patch(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/mentors/updateMentor`, {
         id: mentor._id,
         students: newStudents,
       })
@@ -72,7 +72,7 @@ const StudentCard = ({
     setScores(newScores);
 
     await axios
-      .patch("http://localhost:5000/api/v1/students/updateStudent", {
+      .patch(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/students/updateStudent`, {
         id: student._id,
         mentorID: "",
         mentorName: "",
@@ -89,7 +89,7 @@ const StudentCard = ({
       return id !== student._id;
     });
     await axios
-      .patch("http://localhost:5000/api/v1/mentors/updateMentor", {
+      .patch(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/mentors/updateMentor`, {
         id: mentor._id,
         students: newStudents,
       })
@@ -109,7 +109,7 @@ const StudentCard = ({
     setLoading(true);
 
     await axios
-      .patch("http://localhost:5000/api/v1/students/updateStudent", {
+      .patch(`${process.env.REACT_APP_BACKEND_SERVER_URL}/api/v1/students/updateStudent`, {
         id: student._id,
         scores: scores,
         totalMarks: totalMarks,
