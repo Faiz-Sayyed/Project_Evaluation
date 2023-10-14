@@ -157,6 +157,9 @@ const StudentCard = ({
                             <div key={idx} className='flex'>
                                 <div>{key}: </div>
                                 <input
+                                    min={0}
+                                    max={10}
+                                    type="number"
                                     defaultValue={student.scores[key]}
                                     onChange={(e) => {
                                         const newScores = { ...scores };
