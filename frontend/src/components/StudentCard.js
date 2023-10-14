@@ -6,14 +6,14 @@ const StudentCard = ({
     mentor,
     setMentors,
     setStudents,
-    selectedStudents,
-    setSelectedStudents,
     scores,
     setScores,
     editing,
     setEditing,
     setError,
-    isSelected }) => {
+    isSelected,
+    markedStudentsCount,
+    setMarkedStudentsCount }) => {
 
     const addStudent = async () => {
         setError("");
@@ -43,12 +43,14 @@ const StudentCard = ({
             students: newStudents
         }).then((response) => {
             setMentors(response.data);
-            setSelectedStudents(response.data[0].students.length);
         })
     }
 
     const removeStudent = async () => {
         setError("");
+        if (student.isMarked) {
+            setMarkedStudentsCount(markedStudentsCount - 1);
+        }
 
         var newScores = scores;
         const keys = Object.keys(newScores);
@@ -61,7 +63,8 @@ const StudentCard = ({
             id: student._id,
             mentorID: "",
             mentorName: "",
-            scores: newScores
+            scores: newScores,
+            isMarked: false
         }).then((response) => {
             setStudents(response.data);
         })
@@ -75,17 +78,18 @@ const StudentCard = ({
             students: newStudents
         }).then((response) => {
             setMentors(response.data);
-            setSelectedStudents(response.data[0].students.length);
         })
 
     }
 
     const saveScores = async () => {
         setEditing(0);
+        setMarkedStudentsCount(markedStudentsCount + 1);
 
         await axios.patch('http://localhost:5000/api/v1/students/updateStudent', {
             id: student._id,
-            scores: scores
+            scores: scores,
+            isMarked: true
         }).then((response) => {
             setStudents(response.data);
         })

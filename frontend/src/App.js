@@ -110,9 +110,9 @@ function App() {
   const [mentors, setMentors] = useState([]);
   const [mentor, setMentor] = useState(null);
   const [students, setStudents] = useState([]);
-  const [selectedStudents, setSelectedStudents] = useState(0);
   const [scores, setScores] = useState(null);
   const [editing, setEditing] = useState(0);
+  const [markedStudentsCount, setMarkedStudentsCount] = useState(0);
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -121,7 +121,6 @@ function App() {
         .then((response) => {
           setMentors(response.data);
           setMentor(response.data[0]);
-          setSelectedStudents(response.data[0].students.length)
         })
     }
 
@@ -141,13 +140,18 @@ function App() {
   const submit = async (id) => {
     setError("");
 
-    if (selectedStudents < 3) {
+    if (mentor.students.length < 3) {
       setError("Select atleast 3 students.");
       return;
     }
 
     if (mentor.hasSubmitted) {
-      setError("Marks already submitted");
+      setError("Marks already submitted.");
+      return;
+    }
+
+    if (mentor.students.length > markedStudentsCount) {
+      setError("One or more students have not been alloted marks.")
       return;
     }
 
@@ -156,13 +160,22 @@ function App() {
       hasSubmitted: true
     }).then((response) => {
       setMentors(response.data);
-      setSelectedStudents(response.data[0].students.length);
     })
   }
 
   useEffect(() => {
     setMentor(mentors[0]);
   }, [mentors]);
+
+  useEffect(() => {
+    var count = 0;
+    students.forEach((item) => {
+      if (mentor.students.includes(item._id) && item.isMarked === true) {
+        count++;
+      }
+    })
+    setMarkedStudentsCount(count);
+  }, [students, mentor]);
 
   return (
     <>
@@ -192,11 +205,11 @@ function App() {
                           mentor={mentor}
                           setMentors={setMentors}
                           setStudents={setStudents}
-                          selectedStudents={selectedStudents}
                           scores={scores}
                           setScores={setScores}
-                          setSelectedStudents={setSelectedStudents}
                           isSelected={true}
+                          markedStudentsCount={markedStudentsCount}
+                          setMarkedStudentsCount={setMarkedStudentsCount}
                           editing={editing}
                           setEditing={setEditing}
                           setError={setError}
@@ -221,11 +234,11 @@ function App() {
                         mentor={mentor}
                         setMentors={setMentors}
                         setStudents={setStudents}
-                        selectedStudents={selectedStudents}
                         scores={scores}
                         setScores={setScores}
-                        setSelectedStudents={setSelectedStudents}
                         isSelected={false}
+                        markedStudentsCount={markedStudentsCount}
+                        setMarkedStudentsCount={setMarkedStudentsCount}
                         editing={editing}
                         setEditing={setEditing}
                         setError={setError}
