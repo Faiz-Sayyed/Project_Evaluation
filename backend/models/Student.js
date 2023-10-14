@@ -29,6 +29,10 @@ const student = new mongoose.Schema({
             type: Number,
             default: 0
         }
+    },
+    isMarked: {
+        type: Boolean,
+        default: false
     }
 })
 
